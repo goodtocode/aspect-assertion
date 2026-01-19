@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goodtocode.Assertion", "Goodtocode.Assertion\Goodtocode.Assertion.csproj", "{79E44601-B5B4-8738-1338-8BEED365E0A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goodtocode.Assertion.Tests", "GoodToCode.Assertion.Tests\Goodtocode.Assertion.Tests.csproj", "{AC6106CE-F544-46A2-8052-1E4A864364DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goodtocode.Assertion.Tests", "Goodtocode.Assertion.Tests\Goodtocode.Assertion.Tests.csproj", "{AC6106CE-F544-46A2-8052-1E4A864364DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
