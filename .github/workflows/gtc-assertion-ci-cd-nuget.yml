@@ -22,10 +22,20 @@ on:
       mode:
         description: "Running mode"
         required: true
+
 permissions:
   id-token: write
   contents: read
   security-events: write
+
+env:
+  SCRIPTS_PATH: "./.github/scripts"
+  SRC_PATH: "./src"
+  PROJECT_PATH: "Goodtocode.Assertion"
+  PROJECT_FILE: "Goodtocode.Assertion.csproj"
+  SRC_SLN: "Goodtocode.Assertion.sln"
+  TEST_PATH: "Goodtocode.Assertion.Tests"
+  TEST_PROJECT: "Goodtocode.Assertion.Tests.csproj"
 
 jobs:
   ci:
@@ -39,13 +49,6 @@ jobs:
 
     env:
       RUNTIME_ENV: "Development"
-      SRC_PATH: "./src"
-      SRC_SLN: "Goodtocode.Assertion.sln"
-      PROJECT_PATH: "Goodtocode.Assertion"
-      PROJECT_FILE: "Goodtocode.Assertion.csproj"
-      TEST_PATH: "Goodtocode.Assertion.Tests"
-      TEST_PROJECT: "Goodtocode.Assertion.Tests.csproj"
-      SCRIPTS_PATH: "./.github/scripts"
 
     steps:
       - name: checkout
@@ -63,7 +66,7 @@ jobs:
           echo "VERSION=$version" >> $GITHUB_ENV
         shell: pwsh
 
-      - name: pipeline configuration secrets
+      - name: pipeline environment configuration
         run: |
           echo "ASPNETCORE_ENVIRONMENT=${{ env.RUNTIME_ENV }}" >> $GITHUB_ENV
         shell: pwsh
@@ -84,12 +87,24 @@ jobs:
           dotnet test ${{ env.SRC_PATH }}/${{ env.TEST_PATH }}/${{ env.TEST_PROJECT }} --logger "trx;LogFileName=test_results.trx" --results-directory TestResults-${{ matrix.DOTNET_VERSION }} --verbosity normal
         shell: pwsh
 
+
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
           name: dotnet-results-${{ matrix.DOTNET_VERSION }}
           path: TestResults-${{ matrix.DOTNET_VERSION }}
         if: ${{ always() }}
+
+      - name: Pack NuGet package
+        run: |
+          dotnet pack ${{ env.SRC_PATH }}/${{ env.PROJECT_PATH }}/${{ env.PROJECT_FILE }} --configuration Release --no-build --output nupkg_output
+        shell: pwsh
+
+      - name: Upload NuGet package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          path: nupkg_output/*.nupkg
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
@@ -104,30 +119,13 @@ jobs:
       matrix:
         DOTNET_VERSION: ["9.x"]
     env:
-      SRC_PATH: "./src"
-      PROJECT_PATH: "Goodtocode.Assertion"
-      PROJECT_FILE: "Goodtocode.Assertion.csproj"
       NUGET_OUTPUT: "nupkg_output"
     steps:
-      - name: checkout
-        uses: actions/checkout@v3
-
-      - name: Setup .NET ${{ matrix.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
+      - name: Download NuGet package artifact
+        uses: actions/download-artifact@v4
         with:
-          dotnet-version: ${{ matrix.DOTNET_VERSION }}
-
-      - name: Restore dependencies
-        run: dotnet restore ${{ env.SRC_PATH }}/${{ env.PROJECT_PATH }}/${{ env.PROJECT_FILE }}
-
-      - name: Build
-        run: dotnet build ${{ env.SRC_PATH }}/${{ env.PROJECT_PATH }}/${{ env.PROJECT_FILE }} --configuration Release --no-restore
-
-      - name: Test
-        run: dotnet test ${{ env.SRC_PATH }}/${{ env.PROJECT_PATH }}/${{ env.PROJECT_FILE }} --configuration Release --no-build --verbosity normal
-
-      - name: Pack NuGet package
-        run: dotnet pack ${{ env.SRC_PATH }}/${{ env.PROJECT_PATH }}/${{ env.PROJECT_FILE }} --configuration Release --no-build --output ${{ env.NUGET_OUTPUT }}
+          name: nuget-package
+          path: nupkg_output
 
       - name: Publish to NuGet.org
-        run: dotnet nuget push ${{ env.NUGET_OUTPUT }}/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push nupkg_output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
