@@ -1,6 +1,6 @@
 ﻿using Goodtocode.Assertion;
 
-namespace GoodToCode.Assertion.Tests;
+namespace Goodtocode.Assertion.Tests;
 
 [TestClass]
 public sealed class AssertionScopeTests
