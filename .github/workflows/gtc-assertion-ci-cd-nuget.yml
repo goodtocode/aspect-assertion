@@ -9,18 +9,18 @@ on:
       - src/**
   push:
     branches:
-    - 3-deployment-must-happen-on-complete
+      - 3-deployment-must-happen-on-complete
     paths:
-    - .github/workflows/gtc-assertion-nuget.yml
-    - src/**
+      - .github/workflows/gtc-assertion-nuget.yml
+      - src/**
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to run'
+        description: "Environment to run"
         required: true
-        default: 'development'
+        default: "development"
       mode:
-        description: 'Running mode'  
+        description: "Running mode"
 
 permissions:
   id-token: write
@@ -29,23 +29,23 @@ permissions:
 
 jobs:
   ci:
-    name: 'CI Build, Test, Code QL, Publish'
+    name: "CI Build, Test, Code QL, Publish"
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || github.event_name == 'push'
     environment: development
     strategy:
       matrix:
-        DOTNET_VERSION: ['9.x']
+        DOTNET_VERSION: ["9.x"]
 
-    env:      
-      RUNTIME_ENV: 'Development'
-      SRC_PATH: './src'
-      SRC_SLN: 'Goodtocode.Assertion.sln'      
-      PROJECT_PATH: 'Goodtocode.Assertion'
-      PROJECT_FILE: 'Goodtocode.Assertion.csproj'
-      TEST_PATH: 'Goodtocode.Assertion.Tests'
-      TEST_PROJECT: 'Goodtocode.Assertion.Tests.csproj'
-      SCRIPTS_PATH: './.github/scripts'
+    env:
+      RUNTIME_ENV: "Development"
+      SRC_PATH: "./src"
+      SRC_SLN: "Goodtocode.Assertion.sln"
+      PROJECT_PATH: "Goodtocode.Assertion"
+      PROJECT_FILE: "Goodtocode.Assertion.csproj"
+      TEST_PATH: "Goodtocode.Assertion.Tests"
+      TEST_PROJECT: "Goodtocode.Assertion.Tests.csproj"
+      SCRIPTS_PATH: "./.github/scripts"
 
     steps:
       - name: checkout
@@ -67,15 +67,15 @@ jobs:
         run: |
           echo "ASPNETCORE_ENVIRONMENT=${{ env.RUNTIME_ENV }}" >> $GITHUB_ENV
         shell: pwsh
-          
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
           languages: csharp
-            
+
       - name: Build
         run: |
-          dotnet build ${{ env.SRC_PATH }}/${{ env.SRC_SLN }} --configuration Release       
+          dotnet build ${{ env.SRC_PATH }}/${{ env.SRC_SLN }} --configuration Release
         shell: pwsh
 
       - name: Test
@@ -91,23 +91,23 @@ jobs:
           path: TestResults-${{ matrix.DOTNET_VERSION }}
         if: ${{ always() }}
 
-      - name: Perform CodeQL Analysis 
+      - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 
   cd:
-    name: 'CD Pack and Publish to NuGet.org'
+    name: "CD Pack and Publish to NuGet.org"
     runs-on: ubuntu-latest
     needs: ci
     if: github.event_name == 'push' && github.ref == 'refs/heads/3-deployment-must-happen-on-complete'
     environment: production
     strategy:
       matrix:
-        DOTNET_VERSION: ['9.x']
+        DOTNET_VERSION: ["9.x"]
     env:
-      SRC_PATH: './src'
-      PROJECT_PATH: 'Goodtocode.Assertion'
-      PROJECT_FILE: 'Goodtocode.Assertion.csproj'
-      NUGET_OUTPUT: 'nupkg_output'
+      SRC_PATH: "./src"
+      PROJECT_PATH: "Goodtocode.Assertion"
+      PROJECT_FILE: "Goodtocode.Assertion.csproj"
+      NUGET_OUTPUT: "nupkg_output"
     steps:
       - name: checkout
         uses: actions/checkout@v3
