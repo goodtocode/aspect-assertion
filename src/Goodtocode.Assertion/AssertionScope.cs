@@ -6,8 +6,7 @@ public class AssertionScope : IDisposable
 
     public AssertionScope()
     {
-        if (_scopes.Value == null)
-            _scopes.Value = new Stack<List<string>>();
+        _scopes.Value ??= new Stack<List<string>>();
         _scopes.Value.Push([]);
     }
 

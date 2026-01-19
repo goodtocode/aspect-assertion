@@ -8,6 +8,16 @@
 		<IsPackable>true</IsPackable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+
+		<PackageId>Goodtocode.Assertion</PackageId>
+		<Authors>Robert Good</Authors>
+		<Company>Goodtocode</Company>
+		<Description>A simple, lightweight fluent assertion library for .NET.</Description>
+		<PackageTags>assertion;fluent;testing;unit test</PackageTags>
+		<RepositoryUrl>https://github.com/goodtocode/aspect-assertion</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/goodtocode/aspect-assertion</PackageProjectUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Copyright>Copyright © 2026 Goodtocode</Copyright>
 	</PropertyGroup>
 
 </Project>
