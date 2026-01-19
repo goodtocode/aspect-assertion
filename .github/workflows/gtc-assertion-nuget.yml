@@ -43,8 +43,8 @@ jobs:
       SRC_SLN: 'Goodtocode.Assertion.sln'      
       PROJECT_PATH: 'Goodtocode.Assertion'
       PROJECT_FILE: 'Goodtocode.Assertion.csproj'
-      TEST_PATH: 'Tests.Unit'
-      TEST_PROJECT: 'Tests.Unit.csproj'
+      TEST_PATH: 'Goodtocode.Assertion.Tests'
+      TEST_PROJECT: 'Goodtocode.Assertion.Tests.csproj'
       SCRIPTS_PATH: './.github/scripts'
 
     steps:
