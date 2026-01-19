@@ -63,7 +63,7 @@ jobs:
         run: |
           $json = & "${{ env.SCRIPTS_PATH }}/ci/Get-Version.ps1" -Major 1 -Minor 1 -Patch $env:GITHUB_RUN_NUMBER
           $semver = ($json | ConvertFrom-Json).SemanticVersion
-          echo "SemanticVersion=$semver" | Out-File -FilePath $env:GITHUB_ENV -Append
+          echo "SEMANTIC_VERSION=$semver" | Out-File -FilePath $env:GITHUB_ENV -Append
         shell: pwsh
 
       - name: Set-Version.ps1
@@ -104,7 +104,7 @@ jobs:
 
       - name: Pack NuGet package
         run: |
-          dotnet pack ${{ env.SRC_PATH }}/${{ env.PROJECT_PATH }}/${{ env.PROJECT_FILE }} --configuration Release --no-build --output nupkg_output --version ${{ env.SemanticVersion }}
+          dotnet pack ${{ env.SRC_PATH }}/${{ env.PROJECT_PATH }}/${{ env.PROJECT_FILE }} --configuration Release --no-build --output nupkg_output --version ${{ steps.get_semver.outputs.SEMANTIC_VERSION }}
         shell: pwsh
 
       - name: Upload NuGet package artifact
@@ -136,4 +136,4 @@ jobs:
 
       - name: Publish to NuGet.org
         run: |
-          dotnet nuget push nupkg_output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate --version ${{ env.SemanticVersion }}
+          dotnet nuget push nupkg_output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
