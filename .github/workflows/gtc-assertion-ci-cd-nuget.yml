@@ -100,7 +100,7 @@ jobs:
     needs: ci
     if: |
       github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-    environment: development
+    environment: production
     strategy:
       matrix:
         DOTNET_VERSION: ['9.x']
@@ -131,4 +131,4 @@ jobs:
         run: dotnet pack ${{ env.SRC_PATH }}/${{ env.PROJECT_PATH }}/${{ env.PROJECT_FILE }} --configuration Release --no-build --output ${{ env.NUGET_OUTPUT }}
 
       - name: Publish to NuGet.org
-        run: dotnet nuget push ${{ env.NUGET_OUTPUT }}/*.nupkg --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push ${{ env.NUGET_OUTPUT }}/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate

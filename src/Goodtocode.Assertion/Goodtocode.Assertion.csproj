@@ -18,6 +18,11 @@
 		<PackageProjectUrl>https://github.com/goodtocode/aspect-assertion</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Copyright>Copyright © 2026 Goodtocode</Copyright>
+		<PackageIcon>goodtocode-icon.png</PackageIcon>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="goodtocode-icon.png" Pack="true" PackagePath="" />
+	</ItemGroup>
 
 </Project>
