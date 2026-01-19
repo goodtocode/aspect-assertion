@@ -5,13 +5,13 @@ on:
     branches:
       - 3-deployment-must-happen-on-complete
     paths:
-      - .github/workflows/gtc-assertion-nuget.yml
+      - .github/workflows/gtc-assertion-ci-cd-nuget.yml
       - src/**
   push:
     branches:
       - 3-deployment-must-happen-on-complete
     paths:
-      - .github/workflows/gtc-assertion-nuget.yml
+      - .github/workflows/gtc-assertion-ci-cd-nuget.yml
       - src/**
   workflow_dispatch:
     inputs:
@@ -21,7 +21,7 @@ on:
         default: "development"
       mode:
         description: "Running mode"
-
+        required: true
 permissions:
   id-token: write
   contents: read
