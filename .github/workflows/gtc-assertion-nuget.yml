@@ -5,13 +5,13 @@ on:
     branches:
       - main
     paths:
-      - .github/workflows/COMPANY-rg-PRODUCT-ci-cd.yml
+      - .github/workflows/gtc-assertion-nuget.yml
       - src/**
   push:
     branches:
     - main
     paths:
-    - .github/workflows/COMPANY-rg-PRODUCT-ci-cd.yml
+    - .github/workflows/gtc-assertion-nuget.yml
     - src/**
   workflow_dispatch:
     inputs:
@@ -66,16 +66,7 @@ jobs:
       - name: pipeline configuration secrets
         run: |
           echo "ASPNETCORE_ENVIRONMENT=${{ env.RUNTIME_ENV }}" >> $GITHUB_ENV
-          echo "AZURE_FUNCTIONS_ENVIRONMENT=${{ env.RUNTIME_ENV }}" >> $GITHUB_ENV
-          echo "OpenAI:ApiKey=${{ secrets.OPENAI_APIKEY }}" >> $GITHUB_ENV
         shell: pwsh
-
-      - name: App Settings Variable Substitution
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: '${{ env.SRC_PATH }}/${{ env.PROJECT_PATH }}/appsettings.json, ${{ env.SRC_PATH }}/${{ env.PROJECT_PATH }}/appsettings.${{ env.RUNTIME_ENV }}.json, ${{ env.SRC_PATH }}/${{ env.TEST_PATH }}/appsettings.test.json'
-        env: 
-          OpenAI.ApiKey: ${{ secrets.OPENAI_APIKEY }}
           
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
@@ -140,6 +131,4 @@ jobs:
         run: dotnet pack ${{ env.SRC_PATH }}/${{ env.PROJECT_PATH }}/${{ env.PROJECT_FILE }} --configuration Release --no-build --output ${{ env.NUGET_OUTPUT }}
 
       - name: Publish to NuGet.org
-        run: dotnet nuget push ${{ env.NUGET_OUTPUT }}/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push ${{ env.NUGET_OUTPUT }}/*.nupkg --source https://api.nuget.org/v3/index.json --skip-duplicate
