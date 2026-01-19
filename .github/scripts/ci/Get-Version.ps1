@@ -3,15 +3,19 @@
 #
 # 1. Default (auto date/time for revision/build/patch):
 #    .\Get-Version.ps1
+#    # Defaults: Major=1, Minor=0, Revision=(day of year), Build=(hour+minute), Patch=(month)
 #
 # 2. Set explicit major/minor (auto rest):
 #    .\Get-Version.ps1 -Major 2 -Minor 5
+#    # Defaults: Revision=(day of year), Build=(hour+minute), Patch=(month)
 #
 # 3. Full explicit version (no auto):
 #    .\Get-Version.ps1 -Major 1 -Minor 2 -Revision 3 -Build 4 -Patch 5
+#    # No defaults: all values are explicit
 #
 # 4. Pre-release and commit hash:
 #    .\Get-Version.ps1 -Major 1 -Minor 0 -Patch 1 -PreRelease -beta -CommitHash +abc123
+#    # Defaults: Revision=(day of year), Build=(hour+minute)
 #-----------------------------------------------------------------------
 
 # ***
