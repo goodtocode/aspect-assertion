@@ -53,21 +53,48 @@ If($IsWindows){
 # ***
 # *** Execute
 # ***
-$Major = $Major.Replace('-1', $VersionToReplace.ToString().Substring(0,1)) # Static 1, 2, 3
-$Minor = $Minor.Replace('-1', (Get-Date -UFormat '%Y').ToString().Substring(2,2)) # Year YYYY 2023
-$Revision = $Revision.Replace('-1', (Get-Date -UFormat '%j').ToString()) # DayOfYear D[DD]1-365
-$Build = $Build.Replace('-1', (Get-Date -UFormat '%H%M').ToString()) # HrMin 1937
-$Patch = $Patch.Replace('-1', (Get-Date -UFormat '%m').ToString()) # Month mm
-$PreRelease = $PreRelease.Replace('-1', '') # -alpha
-$CommitHash = $CommitHash.Replace('-1', '') # +204ff0a
+# Calculate versions using Get-Version.ps1
+$ThisDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$getVersionScript = Join-Path $ThisDir 'Get-Version.ps1'
+$getVersionArgs = @()
+if ($Major -ne '-1') { $getVersionArgs += '-Major'; $getVersionArgs += $Major }
+if ($Minor -ne '-1') { $getVersionArgs += '-Minor'; $getVersionArgs += $Minor }
+if ($Revision -ne '-1') { $getVersionArgs += '-Revision'; $getVersionArgs += $Revision }
+if ($Build -ne '-1') { $getVersionArgs += '-Build'; $getVersionArgs += $Build }
+if ($Patch -ne '-1') { $getVersionArgs += '-Patch'; $getVersionArgs += $Patch }
+if ($PreRelease -ne '-1') { $getVersionArgs += '-PreRelease'; $getVersionArgs += $PreRelease }
+if ($CommitHash -ne '-1') { $getVersionArgs += '-CommitHash'; $getVersionArgs += $CommitHash }
+if ($VersionToReplace -ne '1.0.0') { $getVersionArgs += '-VersionToReplace'; $getVersionArgs += $VersionToReplace }
 
+$versionJson = & $getVersionScript @getVersionArgs
+$versionObj = $versionJson | ConvertFrom-Json
 
-# Version Formats
-$FileVersion = "$Major.$Minor.$Revision.$Build" # Ref: https://learn.microsoft.com/en-us/dotnet/standard/library-guidance/versioning
-$AssemblyVersion = "$Major.$Minor.0.0"
-$InformationalVersion = "$Major.$Minor.$Revision$PreRelease$CommitHash"
-$SemanticVersion = "$Major.$Minor.$Patch$PreRelease"
+$FileVersion = $versionObj.FileVersion
+$AssemblyVersion = $versionObj.AssemblyVersion
+$InformationalVersion = $versionObj.InformationalVersion
+$SemanticVersion = $versionObj.SemanticVersion
+
 Write-Debug "FileVersion: $FileVersion SemanticVersion: $SemanticVersion AssemblyVersion: $AssemblyVersion InformationalVersion: $InformationalVersion"
+# Calculate versions using Get-Version.ps1
+$ThisDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$getVersionScript = Join-Path $ThisDir 'Get-Version.ps1'
+$getVersionArgs = @()
+if ($Major -ne '-1') { $getVersionArgs += '-Major'; $getVersionArgs += $Major }
+if ($Minor -ne '-1') { $getVersionArgs += '-Minor'; $getVersionArgs += $Minor }
+if ($Revision -ne '-1') { $getVersionArgs += '-Revision'; $getVersionArgs += $Revision }
+if ($Build -ne '-1') { $getVersionArgs += '-Build'; $getVersionArgs += $Build }
+if ($Patch -ne '-1') { $getVersionArgs += '-Patch'; $getVersionArgs += $Patch }
+if ($PreRelease -ne '-1') { $getVersionArgs += '-PreRelease'; $getVersionArgs += $PreRelease }
+if ($CommitHash -ne '-1') { $getVersionArgs += '-CommitHash'; $getVersionArgs += $CommitHash }
+if ($VersionToReplace -ne '1.0.0') { $getVersionArgs += '-VersionToReplace'; $getVersionArgs += $VersionToReplace }
+
+$versionJson = & $getVersionScript @getVersionArgs
+$versionObj = $versionJson | ConvertFrom-Json
+
+$FileVersion = $versionObj.FileVersion
+$AssemblyVersion = $versionObj.AssemblyVersion
+$InformationalVersion = $versionObj.InformationalVersion
+$SemanticVersion = $versionObj.SemanticVersion
 
 # Package.json version
 Update-LineByContains -Path $Path -Contains 'version' -Line """version"": ""$FileVersion""," -Include package.json
