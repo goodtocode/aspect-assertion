@@ -4,14 +4,12 @@ on:
   pull_request:
     branches:
       - main
-      - 5-replace-file-version-with-semver-in-nuget-package
     paths:
       - .github/workflows/gtc-assertion-ci-cd-nuget.yml
       - src/**
   push:
     branches:
       - main
-      - 5-replace-file-version-with-semver-in-nuget-package
     paths:
       - .github/workflows/gtc-assertion-ci-cd-nuget.yml
       - src/**
@@ -120,7 +118,7 @@ jobs:
     name: "CD Pack and Publish to NuGet.org"
     runs-on: ubuntu-latest
     needs: ci
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/5-replace-file-version-with-semver-in-nuget-package')
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment: production
     strategy:
       matrix:
