@@ -88,15 +88,19 @@ public class GetMyUsersPaginatedQueryValidator : Validator<GetMyUsersPaginatedQu
 ### 4. Unit Test Assertion
 ```csharp
 using Goodtocode.Assertion;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-[Fact]
-public void Should_Throw_When_Assertion_Fails()
+[TestClass]
+public class AssertionTests
 {
-	Assert.Throws<AssertionFailedException>(() =>
-		AssertionScope.Begin()
-			.Assert(() => false, "This should fail.")
-			.End());
+	[TestMethod]
+	public void Should_Throw_When_Assertion_Fails()
+	{
+		Assert.ThrowsException<AssertionFailedException>(() =>
+			AssertionScope.Begin()
+				.Assert(() => false, "This should fail.")
+				.End());
+	}
 }
 ```
 
@@ -109,6 +113,7 @@ public void Should_Throw_When_Assertion_Fails()
 
 | Version | Date        | Release Notes                                    |
 |---------|-------------|--------------------------------------------------|
+| 1.1.28  | 2026-Jan-20 | NuGet (semver) instead of file version.		   |
 | 1.0.0   | 2026-Jan-19 | Initial release                                  |
 
 ## License
