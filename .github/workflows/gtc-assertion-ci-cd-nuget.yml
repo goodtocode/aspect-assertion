@@ -63,7 +63,7 @@ jobs:
         run: |
           $json = & "${{ env.SCRIPTS_PATH }}/ci/Get-Version.ps1" -Major 1 -Minor 1 -Patch $env:GITHUB_RUN_NUMBER
           $semver = ($json | ConvertFrom-Json).SemanticVersion
-          echo "SEMANTIC_VERSION=$semver" | Out-File -FilePath $env:GITHUB_ENV -Append
+          echo "SEMANTIC_VERSION=$semver" >> $env:GITHUB_OUTPUT
         shell: pwsh
 
       - name: Set-Version.ps1
@@ -93,7 +93,6 @@ jobs:
           mkdir -p TestResults-${{ matrix.DOTNET_VERSION }}
           dotnet test ${{ env.SRC_PATH }}/${{ env.TEST_PATH }}/${{ env.TEST_PROJECT }} --logger "trx;LogFileName=test_results.trx" --results-directory TestResults-${{ matrix.DOTNET_VERSION }} --verbosity normal
         shell: pwsh
-
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
