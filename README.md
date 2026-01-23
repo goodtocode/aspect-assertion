@@ -3,7 +3,7 @@
 
 Fluent Assertion aspect-oriented library for .NET Standard 2.0+
 
-[![CI/CD Build, Test and Deploy](https://github.com/goodtocode/aspect-assertion/actions/workflows/gtc-assertion-ci-cd-nuget.yml/badge.svg)](https://github.com/goodtocode/aspect-assertion/actions/workflows/gtc-assertion-ci-cd-nuget.yml)
+[![NuGet CI/CD](https://github.com/goodtocode/aspect-assertion/actions/workflows/gtc-assertion-nuget.yml/badge.svg)](https://github.com/goodtocode/aspect-assertion/actions/workflows/gtc-assertion-nuget.yml)
 
 Goodtocode.Assertion is a .NET library providing fluent assertion and validation utilities for C# projects. It enables developers to write expressive, readable, and maintainable assertions for business logic, unit tests, and runtime validation. The library is designed for extensibility and can be integrated into any .NET Standard 2.0+ project.
 
