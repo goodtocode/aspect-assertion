@@ -96,7 +96,7 @@ public class AssertionTests
 	[TestMethod]
 	public void Should_Throw_When_Assertion_Fails()
 	{
-		Assert.Throws<AssertionFailedException>(() =>
+		Assert.ThrowsException<AssertionFailedException>(() =>
 			AssertionScope.Begin()
 				.Assert(() => false, "This should fail.")
 				.End());

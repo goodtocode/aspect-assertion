@@ -22,7 +22,7 @@ public sealed class AssertionTests
         string? value = null;
 
         // Act & Assert
-        Assert.Throws<AssertionFailedException>(() => value.Should());
+        Assert.ThrowsException<AssertionFailedException>(() => value.Should());
     }
 
     [TestMethod]
@@ -42,7 +42,7 @@ public sealed class AssertionTests
         var value = "not null";
 
         // Act & Assert
-        Assert.Throws<AssertionFailedException>(() => value.ShouldNot());
+        Assert.ThrowsException<AssertionFailedException>(() => value.ShouldNot());
     }
 
     [TestMethod]
@@ -64,7 +64,7 @@ public sealed class AssertionTests
         int expected = 6;
 
         // Act & Assert
-        Assert.Throws<AssertionFailedException>(() => actual.ShouldBe(expected));
+        Assert.ThrowsException<AssertionFailedException>(() => actual.ShouldBe(expected));
     }
 
     [TestMethod]
@@ -84,7 +84,7 @@ public sealed class AssertionTests
         bool condition = false;
 
         // Act & Assert
-        Assert.Throws<AssertionFailedException>(() => condition.ShouldBeTrue());
+        Assert.ThrowsException<AssertionFailedException>(() => condition.ShouldBeTrue());
     }
 
     [TestMethod]
@@ -104,7 +104,7 @@ public sealed class AssertionTests
         bool condition = true;
 
         // Act & Assert
-        Assert.Throws<AssertionFailedException>(() => condition.ShouldBeFalse());
+        Assert.ThrowsException<AssertionFailedException>(() => condition.ShouldBeFalse());
     }
 
     [TestMethod]
@@ -124,7 +124,7 @@ public sealed class AssertionTests
         object value = new();
 
         // Act & Assert
-        Assert.Throws<AssertionFailedException>(() => value.ShouldBeNull());
+        Assert.ThrowsException<AssertionFailedException>(() => value.ShouldBeNull());
     }
 
     [TestMethod]
@@ -144,7 +144,7 @@ public sealed class AssertionTests
         object? value = null;
 
         // Act & Assert
-        Assert.Throws<AssertionFailedException>(() => value.ShouldNotBeNull());
+        Assert.ThrowsException<AssertionFailedException>(() => value.ShouldNotBeNull());
     }
 
     [TestMethod]
@@ -164,7 +164,7 @@ public sealed class AssertionTests
         int value = 1;
 
         // Act & Assert
-        Assert.Throws<AssertionFailedException>(() => value.ShouldBeEmpty());
+        Assert.ThrowsException<AssertionFailedException>(() => value.ShouldBeEmpty());
     }
 
     [TestMethod]
@@ -184,6 +184,6 @@ public sealed class AssertionTests
         int value = default;
 
         // Act & Assert
-        Assert.Throws<AssertionFailedException>(() => value.ShouldNotBeEmpty());
+        Assert.ThrowsException<AssertionFailedException>(() => value.ShouldNotBeEmpty());
     }
 }
