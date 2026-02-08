@@ -30,7 +30,7 @@ public sealed class AssertionScopeTests
         Exception? exception = null;
 
         // Act & Assert
-        Assert.ThrowsException<AssertionFailedException>(() =>
+        Assert.Throws<AssertionFailedException>(() =>
         {
             using (new AssertionScope())
             {
@@ -48,7 +48,7 @@ public sealed class AssertionScopeTests
         Exception? exception = new InvalidOperationException("Test exception");
 
         // Act & Assert
-        Assert.ThrowsException<AssertionFailedException>(() =>
+        Assert.Throws<AssertionFailedException>(() =>
         {
             using (new AssertionScope())
             {
@@ -66,7 +66,7 @@ public sealed class AssertionScopeTests
         Exception? exception = new InvalidOperationException("Test exception", new ArgumentException("Inner"));
 
         // Act & Assert
-        var ex = Assert.ThrowsException<AssertionFailedException>(() =>
+        var ex = Assert.Throws<AssertionFailedException>(() =>
         {
             using (new AssertionScope())
             {
