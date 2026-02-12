@@ -134,7 +134,7 @@ jobs:
 
       - name: Run Coverage Script
         run: |
-          pwsh ${{ env.SRC_PATH }}/Get-CodeCoverage.ps1 `
+          pwsh ${{ env.SCRIPTS_PATH }}/ci/Get-CodeCoverage.ps1 `
             -TestProjectFilter '${{ env.TEST_PROJECT }}' `
             -ProdPackagesOnly `
             -ProductionAssemblies Core.Application Presentation.WebApi Presentation.Blazor `
