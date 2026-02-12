@@ -6,7 +6,7 @@ namespace Goodtocode.Assertion.Tests;
 public sealed class AssertionFailedExceptionTests
 {
     [TestMethod]
-    public void Constructor_SetsMessageProperty()
+    public void ConstructorSetsMessageProperty()
     {
         // Arrange
         var expectedMessage = "Assertion failed: Value cannot be null";
@@ -19,7 +19,7 @@ public sealed class AssertionFailedExceptionTests
     }
 
     [TestMethod]
-    public void Constructor_WithEmptyMessage_CreatesException()
+    public void ConstructorWithEmptyMessageCreatesException()
     {
         // Arrange
         var emptyMessage = string.Empty;
@@ -33,7 +33,7 @@ public sealed class AssertionFailedExceptionTests
     }
 
     [TestMethod]
-    public void Exception_InheritsFromException()
+    public void ExceptionInheritsFromException()
     {
         // Arrange
         var exception = new AssertionFailedException("test");
@@ -43,7 +43,7 @@ public sealed class AssertionFailedExceptionTests
     }
 
     [TestMethod]
-    public void Exception_CanBeCaught_AsException()
+    public void ExceptionCanBeCaughtAsException()
     {
         // Arrange
         Exception? caughtException = null;
@@ -64,7 +64,7 @@ public sealed class AssertionFailedExceptionTests
     }
 
     [TestMethod]
-    public void Exception_CanBeCaught_AsAssertionFailedException()
+    public void ExceptionCanBeCaughtAsAssertionFailedException()
     {
         // Arrange
         AssertionFailedException? caughtException = null;
@@ -85,7 +85,7 @@ public sealed class AssertionFailedExceptionTests
     }
 
     [TestMethod]
-    public void Exception_ToString_ContainsMessage()
+    public void ExceptionToStringContainsMessage()
     {
         // Arrange
         var message = "Custom assertion message";
