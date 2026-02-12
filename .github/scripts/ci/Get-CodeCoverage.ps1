@@ -13,12 +13,39 @@
 Param(
     [string]$TestProjectFilter = '*.Tests.csproj',    
     [switch]$ProdPackagesOnly = $false,    
-    [string[]]$ProductionAssemblies = @()
+    [string[]]$ProductionAssemblies = @(),
+    [string]$Configuration = 'Release',
+    [string]$TestRootPath = ''
 )
 ####################################################################################
 if ($IsWindows) {Set-ExecutionPolicy Unrestricted -Scope Process -Force}
 $VerbosePreference = 'SilentlyContinue' # 'Continue'
 ####################################################################################
+
+function Resolve-TestRootPath {
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.IO.DirectoryInfo]$ScriptDir,
+        [Parameter(Mandatory = $false)]
+        [string]$OverridePath
+    )
+
+    if (-not [string]::IsNullOrWhiteSpace($OverridePath)) {
+        return Get-Item -Path (Resolve-Path -Path $OverridePath)
+    }
+
+    $current = $ScriptDir
+    while ($null -ne $current) {
+        $srcCandidate = Join-Path $current.FullName 'src'
+        if (Test-Path -Path $srcCandidate) {
+            return Get-Item -Path $srcCandidate
+        }
+
+        $current = $current.Parent
+    }
+
+    return $ScriptDir
+}
 
 # Install required tools
 & dotnet tool install -g dotnet-reportgenerator-globaltool
@@ -26,12 +53,13 @@ $VerbosePreference = 'SilentlyContinue' # 'Continue'
 
 $timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
 $scriptPath = Get-Item -Path $PSScriptRoot
-$reportOutputPath = Join-Path $scriptPath "TestResults\Reports\$timestamp"
+$testRootPath = Resolve-TestRootPath -ScriptDir $scriptPath -OverridePath $TestRootPath
+$reportOutputPath = Join-Path $testRootPath "TestResults\Reports\$timestamp"
 
 New-Item -ItemType Directory -Force -Path $reportOutputPath 
 
 # Find test projects
-$testProjects = Get-ChildItem $scriptPath -Filter $TestProjectFilter -Recurse
+$testProjects = Get-ChildItem $testRootPath -Filter $TestProjectFilter -Recurse
 Write-Host "Found $($testProjects.Count) test projects."
 
 foreach ($project in $testProjects) {
@@ -41,12 +69,12 @@ foreach ($project in $testProjects) {
     # Use 'dotnet run' instead of 'dotnet test' for MSTest runner projects
     # This bypasses the VSTest target that's incompatible with .NET 10 SDK
     Push-Location $project.DirectoryName
-    & dotnet run --configuration Debug --no-build -- --coverage
+    & dotnet run --configuration $Configuration --no-build -- --coverage
     Pop-Location
 }
 
 # Collect all coverage files (Microsoft.Testing.Platform outputs .coverage files)
-$coverageFiles = Get-ChildItem -Path $scriptPath -Filter "*.coverage" -Recurse | Select-Object -ExpandProperty FullName
+$coverageFiles = Get-ChildItem -Path $testRootPath -Filter "*.coverage" -Recurse | Select-Object -ExpandProperty FullName
 
 if ($coverageFiles.Count -eq 0) {
     Write-Warning "No coverage files found. Make sure your test projects have code coverage enabled."
